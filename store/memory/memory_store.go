@@ -98,8 +98,14 @@ func (m *MemStore[T]) Update(ctx context.Context, id string, entity *T) error {
 	return nil
 }
 
-func (m *MemStore[T]) Search(ctx context.Context, f func(ctx context.Context, data map[string]T) ([]*T, error)) ([]*T, error) {
+func (m *MemStore[T]) ExecuteQuery(ctx context.Context, f func(ctx context.Context, data map[string]T) ([]*T, error)) ([]*T, error) {
 	m.RLock()
 	defer m.RUnlock()
+	return f(ctx, m.data)
+}
+
+func (m *MemStore[T]) ExecuteUpdate(ctx context.Context, f func(ctx context.Context, data map[string]T) (int, error)) (int, error) {
+	m.Lock()
+	defer m.Unlock()
 	return f(ctx, m.data)
 }

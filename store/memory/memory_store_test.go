@@ -142,7 +142,7 @@ func TestSearch(t *testing.T) {
 	store.Insert(ctx, "2", &TestEntity{ID: "2", Value: "value-2"})
 
 	t.Run("Search entities", func(t *testing.T) {
-		result, err := store.Search(ctx, func(ctx context.Context, data map[string]TestEntity) ([]*TestEntity, error) {
+		result, err := store.ExecuteQuery(ctx, func(ctx context.Context, data map[string]TestEntity) ([]*TestEntity, error) {
 			var entities []*TestEntity
 			for _, entity := range data {
 				if entity.Value == "value-2" {

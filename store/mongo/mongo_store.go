@@ -136,7 +136,7 @@ func (m *MongoStore[T]) Update(ctx context.Context, id string, entity *T) error 
 	return nil
 }
 
-func (m *MongoStore[T]) Search(ctx context.Context, filter bson.M) ([]*T, error) {
+func (m *MongoStore[T]) ExecuteQuery(ctx context.Context, filter bson.M) ([]*T, error) {
 	cursor, err := m.collection.Find(ctx, filter)
 	if err != nil {
 		return nil, err
@@ -153,4 +153,8 @@ func (m *MongoStore[T]) Search(ctx context.Context, filter bson.M) ([]*T, error)
 	}
 
 	return results, nil
+}
+
+func (m *MongoStore[T]) ExecuteUpdate(ctx context.Context, f func(ctx context.Context, collection *mongo.Collection) (int, error)) (int, error) {
+	return f(ctx, m.collection)
 }
