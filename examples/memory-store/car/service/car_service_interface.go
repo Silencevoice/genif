@@ -2,7 +2,8 @@ package service
 
 import (
 	"context"
-	"exmemory/car/model"
+
+	"github.com/Silencevoice/go-store/examples/memory-store/car/model"
 )
 
 type CarService interface {

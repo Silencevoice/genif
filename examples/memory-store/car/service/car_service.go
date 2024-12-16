@@ -2,8 +2,9 @@ package service
 
 import (
 	"context"
-	"exmemory/car/model"
-	"exmemory/car/repository"
+
+	"github.com/Silencevoice/go-store/examples/memory-store/car/model"
+	"github.com/Silencevoice/go-store/examples/memory-store/car/repository"
 )
 
 type CarServiceImpl struct {

@@ -1,4 +1,4 @@
-module github.com/Silencevoice/genif/store
+module github.com/Silencevoice/go-store
 
 go 1.22
 
