@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"genif/car/model"
-	"genif/store/memory"
+	"github.com/Silencevoice/go-store/examples/memory-store/car/model"
+	"github.com/Silencevoice/go-store/memory"
 )
 
 type CarRepository struct {
