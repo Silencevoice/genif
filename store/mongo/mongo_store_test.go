@@ -275,7 +275,7 @@ func TestMongoStore_Search(t *testing.T) {
 
 		// Ejecutar el método
 		filter := bson.M{"value": bson.M{"$regex": "^value"}}
-		result, err := store.Search(context.Background(), filter)
+		result, err := store.ExecuteQuery(context.Background(), filter)
 
 		// Validar resultados
 		assert.NoError(mt, err)
@@ -293,7 +293,7 @@ func TestMongoStore_Search(t *testing.T) {
 
 		// Ejecutar el método
 		filter := bson.M{"value": "non-existent"}
-		result, err := store.Search(context.Background(), filter)
+		result, err := store.ExecuteQuery(context.Background(), filter)
 
 		// Validar resultados
 		assert.NoError(mt, err)
@@ -312,7 +312,7 @@ func TestMongoStore_Search(t *testing.T) {
 
 		// Ejecutar el método
 		filter := bson.M{"value": bson.M{"$regex": "^value"}}
-		result, err := store.Search(context.Background(), filter)
+		result, err := store.ExecuteQuery(context.Background(), filter)
 
 		// Validar resultados
 		assert.Nil(mt, result)

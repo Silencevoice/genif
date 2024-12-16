@@ -39,7 +39,7 @@ func (s CarServiceImpl) FindCarsByModel(ctx context.Context, carModel string) ([
 		return result, nil
 	}
 
-	return s.repo.Search(ctx, filterFunc)
+	return s.repo.ExecuteQuery(ctx, filterFunc)
 }
 
 func NewCarService(carRepo *repository.CarRepository) CarService {
