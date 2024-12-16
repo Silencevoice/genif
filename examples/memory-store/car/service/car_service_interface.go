@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"genif/car/model"
+	"exmemory/car/model"
 )
 
 type CarService interface {

@@ -2,8 +2,8 @@ package service
 
 import (
 	"context"
-	"genif/car/model"
-	"genif/car/repository"
+	"exmemory/car/model"
+	"exmemory/car/repository"
 )
 
 type CarServiceImpl struct {

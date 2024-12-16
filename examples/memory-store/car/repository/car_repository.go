@@ -1,8 +1,9 @@
 package repository
 
 import (
-	"genif/car/model"
-	"genif/store/memory"
+	"exmemory/car/model"
+
+	"github.com/Silencevoice/genif/store/memory"
 )
 
 type CarRepository struct {
