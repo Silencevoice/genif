@@ -36,3 +36,19 @@ jobs:
     - name: Run tests with coverage
       run: go test -v -coverprofile=coverage.out ./...
 
+    - name: Create go.work
+      run: |
+        go work init
+        go work use .
+        go work use ./examples/memory-store
+    
+    - name: Sync workspace
+      run: go work sync
+
+    - name: Test Examples
+      working-directory: ./examples/memory-store
+      run: |
+        go work use ../../
+        go test -v ./...
+    
+
