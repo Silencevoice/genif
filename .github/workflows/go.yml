@@ -8,6 +8,7 @@ on:
     branches: [ "*" ]       # Execute every push
   pull_request:
     branches: [ "*" ]       # Execute every PR
+  workflow_dispatch:
 
 jobs:
   build-and-test:
@@ -24,6 +25,16 @@ jobs:
       with:
         go-version: ${{ matrix.go-version }}
 
+    - name: Cache Go Modules
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cache/go-build
+          ~/go/pkg/mod
+        key: ${{ runner.os }}-go-${{ matrix.go-version }}-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-${{ matrix.go-version }}-
+
     - name: Verify dependencies
       run: go mod tidy && git diff --exit-code
 
@@ -33,8 +44,8 @@ jobs:
     - name: Build
       run: go build -v ./...
 
-    - name: Run tests with coverage
-      run: go test -v -coverprofile=coverage.out ./...
+    - name: Run tests for main module
+      run: go test -coverprofile=cover_main.out ./...
 
     - name: Create go.work
       run: |
@@ -49,6 +60,17 @@ jobs:
       working-directory: ./examples/memory-store
       run: |
         go work use ../../
-        go test -v ./...
-    
+        go test -coverprofile=cover_examples.out ./...
+    - name: Combine coverage reports
+      run: |
+        echo "mode: set" > cover.out
+        tail -n +2 cover_main.out >> cover.out
+        tail -n +2 ./examples/memory-store/cover_examples.out >> cover.out
+    - name: Generate HTML coverage report
+      run: go tool cover -html=cover.out -o coverage.html
 
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: coverage.html
