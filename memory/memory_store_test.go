@@ -2,6 +2,7 @@ package memory
 
 import (
 	"context"
+	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -135,7 +136,7 @@ func TestGetAll(t *testing.T) {
 	})
 }
 
-func TestSearch(t *testing.T) {
+func TestExecuteQuery(t *testing.T) {
 	ctx := context.Background()
 	store := NewMemStore[TestEntity]()
 	store.Insert(ctx, "1", &TestEntity{ID: "1", Value: "value-1"})
@@ -155,5 +156,31 @@ func TestSearch(t *testing.T) {
 		require.NoError(t, err)
 		assert.Len(t, result, 1)
 		assert.Equal(t, "value-2", result[0].Value)
+	})
+}
+
+func TestExecuteUpdate(t *testing.T) {
+	ctx := context.Background()
+	store := NewMemStore[TestEntity]()
+	store.Insert(ctx, "1", &TestEntity{ID: "1", Value: "value-1"})
+	store.Insert(ctx, "2", &TestEntity{ID: "2", Value: "value-2"})
+
+	t.Run("Update entities OK", func(t *testing.T) {
+		num, err := store.ExecuteUpdate(ctx, func(ctx context.Context, data map[string]TestEntity) (int, error) {
+			ent, ok := data["1"]
+			if !ok {
+				return 0, errors.New("not found entity")
+			}
+			ent.Value = "updated-value-1"
+			data["1"] = ent
+			return 1, nil
+		})
+
+		require.NoError(t, err)
+		assert.Equal(t, 1, num)
+
+		ent, err := store.GetByID(ctx, "1")
+		require.NoError(t, err)
+		assert.Equal(t, "updated-value-1", ent.Value)
 	})
 }
